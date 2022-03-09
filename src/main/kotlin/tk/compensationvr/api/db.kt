@@ -1,12 +1,16 @@
 package tk.compensationvr.api
 
 import kotlinx.serialization.*
-import tk.compensationvr.api.items.Item
 import tk.compensationvr.api.serializables.Outfit
+import tk.compensationvr.api.util.LazyThreadedValue
 
 object db {
     internal object BinaryProvider {} // firebase wrapper
-    internal object DataProvider {} // mongodb + cache wrapper
+    internal object DataProvider {
+        inline fun <reified T : Any> fromDocument(documentId: String, id_lookup: String) : T? {
+            TODO()
+        }
+    } // mongodb + cache wrapper
     object account {
         object AccountDataStructures {
             /*
@@ -82,9 +86,36 @@ object db {
 
     }
     object items {
-        fun all() : List<Item> = TODO()
-        fun get(id: String) : Item = TODO()
+        object ItemDataStructures {
+            class Item(val id: String) {
+                val serializable: ItemSerializable by LazyThreadedValue {
+                    return@LazyThreadedValue DataProvider.fromDocument("items", id) ?: ItemSerializable(exists = false)
+                }
+            }
+            @Serializable
+            class ItemSerializable(
+                val id: String = "_",
+                val variant: String = "_",
+                val slot: String = "_",
+                val name: String = "_",
+                val description: String = "_",
+                val tags: List<String> = listOf("_"),
+                val canPurchase: Boolean = false,
+                val canTransfer: Boolean = false,
+                val canRefund: Boolean = false,
+                val canGift: Boolean = false,
+                val buyPrice: Int = 0,
+                val refundPrice: Int = 0,
+                val giftPrice: Int = 0,
+                @Transient val exists: Boolean = true
+                )
+
+        }
+
+        fun all() : List<ItemDataStructures.ItemSerializable> = TODO()
+        fun get(id: String) : ItemDataStructures.ItemSerializable {
+            return ItemDataStructures.Item(id).serializable
+        }
 
     }
-
 }

@@ -2,6 +2,8 @@ import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
+import io.ktor.http.content.*
+import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
@@ -9,12 +11,10 @@ import io.ktor.server.engine.*
 import io.ktor.server.tomcat.*
 import kotlinx.serialization.*
 import tk.compensationvr.api.auth
-import tk.compensationvr.api.items.ClothingItem
 import tk.compensationvr.api.serializables.Outfit
 import tk.compensationvr.api.serializables.Version
 import tk.compensationvr.api.db;
-
-
+import java.io.File
 
 
 fun main() {
@@ -60,11 +60,25 @@ fun main() {
                 call.respond(db.items.all())
             }
             get("/items/{id}/info") {
-                val t = ClothingItem(call.parameters["id"]!!)
-                call.respond(t.serialize())
             }
 
-
+// THIS **STAYS**
+//            post("/run_asm") {
+//                call.receiveMultipart().let {
+//                    val file = it.readAllParts().first { it is PartData.FileItem } as PartData.FileItem
+//                    val bytes = file.streamProvider().readBytes()
+//                    val out = File.createTempFile("asm", ".asm")
+//                    out.writeBytes(bytes)
+//                    out.deleteOnExit()
+//                    val p = ProcessBuilder("/usr/bin/nasm", "-f", "bin", out.absolutePath).start()
+//                    p.waitFor()
+//                    val out2 = File.createTempFile("asm", ".bin")
+//                    out2.writeBytes(p.inputStream.readBytes())
+//                    out2.deleteOnExit()
+//                    call.respond(out2.readBytes())
+//
+//                }
+//            }
 
         }
 
