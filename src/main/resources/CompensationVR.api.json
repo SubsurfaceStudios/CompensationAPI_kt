@@ -1,0 +1,44 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "CompensationVR API",
+    "description": "API for the CompensationVR Game",
+    "version": "2.0.0"
+  },
+  "servers": [
+    {
+      "url": "https"
+    },
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Development Server"
+    }
+
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "description": "Get the API version (or check if the API is running)",
+        "operationId": "getVersion",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+}
