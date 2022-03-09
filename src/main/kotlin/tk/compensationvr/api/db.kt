@@ -9,6 +9,10 @@ object db {
     internal object DataProvider {} // mongodb + cache wrapper
     object account {
         object AccountDataStructures {
+            /*
+            * Account data structures
+            * UserLoginPayload
+             */
             @Serializable
             data class UserLoginPayload(val userId: String, val username: String, @SerialName("accessToken") val token: String)
             @Serializable
